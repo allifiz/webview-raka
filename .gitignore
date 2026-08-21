@@ -1,0 +1,22 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub/
+build/
+coverage/
+
+# Android Studio
+.idea/
+*.iml
+
+# Android
+android/.gradle/
+android/local.properties
+android/app/debug/
+android/app/profile/
+android/app/release/
+
+# Environment
+.env
+*.keystore
+key.properties
