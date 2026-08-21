@@ -8,6 +8,7 @@ Fondasi Flutter WebView sudah dibuat di repository:
 - Izin kamera dan lokasi diminta di Flutter, lalu diteruskan saat WebView meminta kamera/geolocation.
 - Ada loading bar, halaman gagal koneksi, retry, navigasi back, dan pembukaan link eksternal.
 - Test unit dasar untuk konfigurasi URL tersedia.
+- API Flutter/InAppWebView yang deprecated sudah diganti dengan `PopScope`, `onReceivedError`, dan `onReceivedHttpError`.
 - UAT plan sudah disiapkan di `docs/UAT.md`.
 
 ## Belum diverifikasi
