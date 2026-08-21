@@ -172,7 +172,7 @@ class _AttendanceWebViewPageState extends State<AttendanceWebViewPage> {
                   }
                 },
                 onReceivedError: (controller, request, error) {
-                  if (!request.isForMainFrame || !mounted) {
+                  if (request.isForMainFrame != true || !mounted) {
                     return;
                   }
 
@@ -183,8 +183,11 @@ class _AttendanceWebViewPageState extends State<AttendanceWebViewPage> {
                   });
                 },
                 onReceivedHttpError: (controller, request, errorResponse) {
-                  if (!request.isForMainFrame ||
-                      errorResponse.statusCode < 400 ||
+                  final statusCode = errorResponse.statusCode;
+
+                  if (request.isForMainFrame != true ||
+                      statusCode == null ||
+                      statusCode < 400 ||
                       !mounted) {
                     return;
                   }
@@ -192,7 +195,7 @@ class _AttendanceWebViewPageState extends State<AttendanceWebViewPage> {
                   setState(() {
                     _hasError = true;
                     _errorMessage =
-                        'Server mengembalikan HTTP ${errorResponse.statusCode}. Coba lagi beberapa saat.';
+                        'Server mengembalikan HTTP $statusCode. Coba lagi beberapa saat.';
                   });
                 },
               ),
