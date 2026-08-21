@@ -82,23 +82,16 @@ class _AttendanceWebViewPageState extends State<AttendanceWebViewPage> {
       return const _ConfigurationErrorPage();
     }
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) async {
-        if (didPop) {
-          return;
-        }
-
+    return WillPopScope(
+      onWillPop: () async {
         final canGoBack = await _webViewController?.canGoBack() ?? false;
 
         if (canGoBack) {
           await _webViewController?.goBack();
-          return;
+          return false;
         }
 
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
+        return true;
       },
       child: Scaffold(
         body: SafeArea(
