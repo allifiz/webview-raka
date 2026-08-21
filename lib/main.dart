@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -82,16 +83,21 @@ class _AttendanceWebViewPageState extends State<AttendanceWebViewPage> {
       return const _ConfigurationErrorPage();
     }
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) {
+          return;
+        }
+
         final canGoBack = await _webViewController?.canGoBack() ?? false;
 
         if (canGoBack) {
           await _webViewController?.goBack();
-          return false;
+          return;
         }
 
-        return true;
+        await SystemNavigator.pop();
       },
       child: Scaffold(
         body: SafeArea(
@@ -165,23 +171,29 @@ class _AttendanceWebViewPageState extends State<AttendanceWebViewPage> {
                     setState(() => _hasError = false);
                   }
                 },
-                onLoadError: (controller, url, code, message) {
-                  if (mounted) {
-                    setState(() {
-                      _hasError = true;
-                      _errorMessage =
-                          'Halaman absensi gagal dimuat. Periksa internet atau URL server.';
-                    });
+                onReceivedError: (controller, request, error) {
+                  if (!request.isForMainFrame || !mounted) {
+                    return;
                   }
+
+                  setState(() {
+                    _hasError = true;
+                    _errorMessage =
+                        'Halaman absensi gagal dimuat. Periksa internet atau URL server.';
+                  });
                 },
-                onLoadHttpError: (controller, url, statusCode, description) {
-                  if (statusCode >= 400 && mounted) {
-                    setState(() {
-                      _hasError = true;
-                      _errorMessage =
-                          'Server mengembalikan HTTP $statusCode. Coba lagi beberapa saat.';
-                    });
+                onReceivedHttpError: (controller, request, errorResponse) {
+                  if (!request.isForMainFrame ||
+                      errorResponse.statusCode < 400 ||
+                      !mounted) {
+                    return;
                   }
+
+                  setState(() {
+                    _hasError = true;
+                    _errorMessage =
+                        'Server mengembalikan HTTP ${errorResponse.statusCode}. Coba lagi beberapa saat.';
+                  });
                 },
               ),
               if (_progress < 1 && !_hasError)
