@@ -9,6 +9,7 @@ Fondasi Flutter WebView sudah dibuat di repository:
 - Ada loading bar, halaman gagal koneksi, retry, navigasi back, dan pembukaan link eksternal.
 - Test unit dasar untuk konfigurasi URL tersedia.
 - API Flutter/InAppWebView yang deprecated sudah diganti dengan `PopScope`, `onReceivedError`, dan `onReceivedHttpError`.
+- Nilai nullable dari callback error WebView sudah ditangani agar lulus null-safety analyzer.
 - UAT plan sudah disiapkan di `docs/UAT.md`.
 
 ## Belum diverifikasi
